@@ -1,0 +1,70 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@local
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8081:80"
+    depends_on:
+      - postgres
+
+  api:
+    build:
+      context: ./backend/OrderService.Api
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_CONN=${POSTGRES_CONN}
+      - SERVICE_BUS_CONNECTIONSTRING=${SERVICE_BUS_CONNECTIONSTRING}
+      - ASPNETCORE_URLS=${ASPNETCORE_URLS}
+    ports:
+      - "5000:5000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- --timeout=5 http://localhost:5000/hc || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  worker:
+    build:
+      context: ./backend/OrderService.Worker
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_CONN=${POSTGRES_CONN}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80"
+    environment:
+      - VITE_API_URL=${VITE_API_URL}
+    depends_on:
+      - api
+
+volumes:
+  pgdata:
