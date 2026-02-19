@@ -1,0 +1,5 @@
+/home/harrison/Área de Trabalho/projetos/poc-tmb/backend/OrderService.Worker/obj/Debug/net7.0/OrderService.Worker.csproj.AssemblyReference.cache
+/home/harrison/Área de Trabalho/projetos/poc-tmb/backend/OrderService.Worker/obj/Debug/net7.0/OrderService.Worker.GeneratedMSBuildEditorConfig.editorconfig
+/home/harrison/Área de Trabalho/projetos/poc-tmb/backend/OrderService.Worker/obj/Debug/net7.0/OrderService.Worker.AssemblyInfoInputs.cache
+/home/harrison/Área de Trabalho/projetos/poc-tmb/backend/OrderService.Worker/obj/Debug/net7.0/OrderService.Worker.AssemblyInfo.cs
+/home/harrison/Área de Trabalho/projetos/poc-tmb/backend/OrderService.Worker/obj/Debug/net7.0/OrderService.Worker.csproj.CoreCompileInputs.cache
